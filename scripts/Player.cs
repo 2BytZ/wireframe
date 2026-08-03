@@ -1,7 +1,4 @@
 using Godot;
-using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-using System.Security.Cryptography.X509Certificates;
 
 public partial class Player : CharacterBody3D
 {
