@@ -1,107 +1,60 @@
 [gd_scene format=3 uid="uid://jn1wcdeax513"]
 
-[ext_resource type="Script" uid="uid://2oagdlmvuyah" path="res://scripts/Player.cs" id="1_o5qli"]
+[ext_resource type="Texture2D" uid="uid://cmwq018n6c04d" path="res://textures/dev/grids/Dark/texture_07.png" id="1_0wfyh"]
+[ext_resource type="Script" uid="uid://fg78f6pkp1gs" path="res://scripts/Player.cs" id="1_o5qli"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fjbp4"]
-albedo_color = Color(0.5526121, 0.2164789, 0.058250405, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jyhfs"]
-albedo_color = Color(0.16862746, 0.5019608, 1, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nvmlg"]
-albedo_color = Color(0.5854947, 0.5122267, 0.5122267, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o5qli"]
+albedo_texture = ExtResource("1_0wfyh")
+uv1_triplanar = true
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8heme"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_o5qli"]
 height = 1.2
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_o5qli"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0wfyh"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
 ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
 
-[sub_resource type="Sky" id="Sky_0wfyh"]
-sky_material = SubResource("ProceduralSkyMaterial_o5qli")
+[sub_resource type="Sky" id="Sky_sugp2"]
+sky_material = SubResource("ProceduralSkyMaterial_0wfyh")
 
-[sub_resource type="Environment" id="Environment_sugp2"]
-background_mode = 1
-background_energy_multiplier = 0.0
-sky = SubResource("Sky_0wfyh")
-ambient_light_source = 2
-ambient_light_color = Color(1, 1, 1, 1)
+[sub_resource type="Environment" id="Environment_jyhfs"]
+background_mode = 2
+sky = SubResource("Sky_sugp2")
 
 [node name="world" type="Node3D" unique_id=1817282360]
+
+[node name="DebugUI" type="CanvasLayer" parent="." unique_id=874913316]
+layer = 100
+
+[node name="MarginContainer" type="MarginContainer" parent="DebugUI" unique_id=899921408]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+
+[node name="Label" type="Label" parent="DebugUI/MarginContainer" unique_id=637615195]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Speed: 0.0 / 0
+Velocity: 0.0"
 
 [node name="stage" type="Node3D" parent="." unique_id=747870415]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="stage" unique_id=2107544657]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.087952, -0.5, -18.523438)
 use_collision = true
-size = Vector3(20, 1, 20)
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="stage" unique_id=577418989]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3792067, 1.90365, -5.304593)
-use_collision = true
-size = Vector3(9.227661, 1, 9.235352)
-material = SubResource("StandardMaterial3D_fjbp4")
-
-[node name="CSGBox3D3" type="CSGBox3D" parent="stage" unique_id=1990342499]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.367096, 3.8134584, -2.123552)
-use_collision = true
-size = Vector3(10, 1, 9.235352)
-
-[node name="nonWallRunnableWall" type="CSGBox3D" parent="stage" unique_id=828381772]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3932576, 10.48147)
-use_collision = true
-collision_layer = 3
-size = Vector3(20, 5, 1)
-
-[node name="wallRunnableWall" type="CSGBox3D" parent="stage" unique_id=1984974396]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8322754, 3.1194086, -10.374827)
-use_collision = true
-size = Vector3(14.335449, 8.106934, 1)
-material = SubResource("StandardMaterial3D_jyhfs")
-
-[node name="wallRunnableWall4" type="CSGBox3D" parent="stage" unique_id=285677106]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.109831, 0.74972653, -10.374827)
-use_collision = true
-size = Vector3(5.784912, 3.324829, 1)
-material = SubResource("StandardMaterial3D_jyhfs")
-
-[node name="wallRunnableWall3" type="CSGBox3D" parent="stage" unique_id=1669225917]
-transform = Transform3D(0.9241853, 0, -0.38194433, 0, 1, 0, 0.38194433, 0, 0.9241853, 30.72594, 5.0517206, -8.846427)
-use_collision = true
-size = Vector3(7.8271484, 10, 1)
-material = SubResource("StandardMaterial3D_jyhfs")
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="stage" unique_id=1955097057]
-transform = Transform3D(10.265, 0, 0, 0, 10.265, 0, 0, 0, 10.265, -12.152608, 0, 0)
-use_collision = true
-material = SubResource("StandardMaterial3D_nvmlg")
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="stage/CSGCylinder3D" unique_id=1051881871]
-transform = Transform3D(0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0.1900903, 0.51276493, 0)
-operation = 2
-height = 1.0263672
-
-[node name="wallRunnableWall2" type="CSGBox3D" parent="stage" unique_id=463979000]
-transform = Transform3D(0.99999994, 0, -5.820766e-11, 0, 0.99999994, 0, 5.820766e-11, 0, 0.99999994, 21.83629, 5.065942, -10.351894)
-use_collision = true
-size = Vector3(20, 10, 1)
-material = SubResource("StandardMaterial3D_jyhfs")
-
-[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="stage/wallRunnableWall2" unique_id=827194051]
-transform = Transform3D(-0.0066921124, 0, -10.2649975, 0, 10.265, 0, 10.2649975, 0, -0.0066921124, 0.34928513, -0.031933308, -0.50161266)
-use_collision = true
-height = 0.9766953
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="stage/wallRunnableWall2" unique_id=867501878]
-transform = Transform3D(-0.006692147, 0, -10.264994, 0, 10.264999, 0, 10.264994, 0, -0.006692147, 0.34801102, 0.015130997, 1.407237)
-operation = 2
-height = 0.9946289
+size = Vector3(74.1759, 1, 57.046875)
+material = SubResource("StandardMaterial3D_o5qli")
 
 [node name="player" type="CharacterBody3D" parent="." unique_id=1937082246]
 script = ExtResource("1_o5qli")
+groundAcceleration = 16.0
 
 [node name="standingCollisionShape" type="CollisionShape3D" parent="player" unique_id=80811588]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -130,11 +83,10 @@ transform = Transform3D(1, 0, 0, 0, -0.116720706, -0.99316484, 0, 0.99316484, -0
 
 [node name="env" type="Node3D" parent="." unique_id=1943740901]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="env" unique_id=1057535295]
-environment = SubResource("Environment_sugp2")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env" unique_id=176446181]
-transform = Transform3D(-0.8660254, -0.50000006, -2.1855696e-08, 0, -4.371139e-08, 1, -0.50000006, 0.8660254, 3.7855173e-08, 0, 0, 0)
-light_energy = 0.258
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env" unique_id=1070772150]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
 directional_shadow_max_distance = 1.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="env/DirectionalLight3D" unique_id=75059980]
+environment = SubResource("Environment_jyhfs")

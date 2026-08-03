@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="wireframe"
+config/name="movement sandbox"
 run/main_scene="uid://jn1wcdeax513"
 config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
