@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 public partial class Player : CharacterBody3D
@@ -13,16 +14,20 @@ public partial class Player : CharacterBody3D
 	private RayCast3D _raycast;
 	private Node3D _wallrun;
 	private Vector3 _wallrunDirection = Vector3.Zero;
+	private Label _speedDebugLabel;
 
 	private RayCast3D _wallRunBoostDirRaycast;
 
 	//  Speed vars
 
-	public float speedCurrent = 5.0f;
+	[Export] public float speedCap = 36f;
+
+	public float speedCurrent = 0.0f;
 
 	public const float runSpeed = 5.0f;
 	public const float crouchSpeed = 3.0f;
 	
+
 	// States
 	
 	private enum MovementState
@@ -79,6 +84,19 @@ public partial class Player : CharacterBody3D
 
 	public const float jumpVelocity = 4.5f;
 
+	public float groundAcceleration = 14.0f;
+	public float groundFriction = 0.2f;
+
+
+	public float airCap = 0.85f;
+	public float airAcceleration = 800.0f;
+	public float airMoveSpeed = 500.0f;
+
+	public float accelerationCap = 80f;
+	public float acceleration = 0.0f;
+	public float deceleration = 0.0f;
+	public float airDrag = 0.8f;
+
 	// Input vars
 
 	Vector3 direction = Vector3.Zero;
@@ -99,7 +117,7 @@ public partial class Player : CharacterBody3D
 		_raycast = GetNode<RayCast3D>("RayCast3D");
 		_wallrun = GetNode<Node3D>("wallrun");
 		_wallRunBoostDirRaycast = GetNode<RayCast3D>("wallRunBoostDirRay");
-
+		_speedDebugLabel = GetNode<Label>("/root/world/HUD/SpeedDebugLabel");
 
 	}
 	// Handle mouse movement.
@@ -126,10 +144,16 @@ public partial class Player : CharacterBody3D
 	public override void _PhysicsProcess(double delta)
 	{
 
+	
+
+
 		// Getting movement input
 
 		Vector2 inputDir = Input.GetVector("Left", "Right", "Forward", "Back");
-		
+		direction = (_head.GlobalTransform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+		deceleration = direction != Vector3.Zero ? IsOnFloor() ? MathF.Max(0, groundFriction) : MathF.Max(0, airDrag) : 0;
+
+
 		// Getting the velocity
 
 		Vector3 velocity = Velocity;
@@ -145,7 +169,7 @@ public partial class Player : CharacterBody3D
 
 		if (Input.IsActionPressed("Crouch") || sliding)
 		{
-			speedCurrent = crouchSpeed;
+			speedCurrent = Mathf.Lerp(speedCurrent, crouchSpeed, (float)delta);
 			Vector3 headPosition = _head.Position;
 			headPosition.Y = _headStandingPosition.Y + (float)crouchDepth;
 			_head.Position = headPosition;
@@ -176,8 +200,6 @@ public partial class Player : CharacterBody3D
 			Vector3 headPosition = _head.Position;
 			headPosition.Y = _headStandingPosition.Y;
 			_head.Position = headPosition;
-			
-			speedCurrent = runSpeed;
 
 			running = true;
 			crouching = false;
@@ -322,7 +344,7 @@ public partial class Player : CharacterBody3D
 			if (IsOnFloor())
 			{
 				velocity.Y = jumpVelocity;
-				sliding = false;		
+				sliding = false;	
 			}
 			
 			if(isWallrunning)
@@ -345,26 +367,17 @@ public partial class Player : CharacterBody3D
 			direction = _wallrunDirection;
 			speedCurrent = runSpeed;
 		}
-		else
+		else if (sliding)
 		{
-			direction = (_head.GlobalTransform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
-			
+			speedCurrent += (float)(slideTimer + 0.1) * (float)slideSpeed;
 		}
-		
-		if (sliding)
-		{
-			direction = (_head.GlobalTransform.Basis * new Vector3(slideVector.X, 0, slideVector.Y)).Normalized();
-			speedCurrent = (float)(slideTimer + 0.1) * (float)slideSpeed;
-		}
-		
-		if (dashTimer > 0.0)
+		else if (dashTimer > 0.0)
 		{
 			dashTimer -= delta;
 			float dashT = Mathf.Clamp(1.0f - (float)(dashTimer / dashTimerMax), 0.0f, 1.0f);
 			float currentDashSpeed = Mathf.Lerp((float)dashStartSpeed, (float)dashEndSpeed, dashT);
-			Vector3 dashVelocity = dashDirection * currentDashSpeed;
-			dashVelocity.Y += dashVerticalBoost * (1.0f - dashT);
-			velocity = dashVelocity;
+			speedCurrent += currentDashSpeed;
+			velocity.Y += dashVerticalBoost * (1.0f - dashT);
 			if (dashTimer <= 0.0)
 			{
 				dashTimer = 0.0;
@@ -372,17 +385,24 @@ public partial class Player : CharacterBody3D
 		}
 		else if (direction != Vector3.Zero)
 		{
-			velocity.X = direction.X * speedCurrent;
-			velocity.Z = direction.Z * speedCurrent;
+			speedCurrent = Mathf.Lerp(speedCurrent, runSpeed, (float)delta);
 		}
-		else
-		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, speedCurrent);
-			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, speedCurrent);
-		}
+		
 
+		
+		acceleration = Mathf.Max(0, MathF.Min(accelerationCap, speedCurrent - deceleration));
+
+		speedCurrent = Mathf.MoveToward(speedCurrent, runSpeed, acceleration * (float)delta); // no touchy >:(
+		speedCurrent = Mathf.Min(speedCap, speedCurrent); // no touchy >:(
+		velocity.X = direction.X * speedCurrent;
+		velocity.Z = direction.Z * speedCurrent;
 		Velocity = velocity;
 		MoveAndSlide();
+
+		if (_speedDebugLabel != null)
+		{
+			_speedDebugLabel.Text = $"Speed: {speedCurrent:F1}\nAccel: {acceleration:F1}\nDecel: {deceleration:F1}";
+		}
 
 	}
 }

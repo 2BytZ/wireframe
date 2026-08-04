@@ -128,6 +128,17 @@ transform = Transform3D(1, 0, 0, 0, -0.116720706, -0.99316484, 0, 0.99316484, -0
 
 [node name="checkWall" type="RayCast3D" parent="player" unique_id=1669992811]
 
+[node name="HUD" type="CanvasLayer" parent="."]
+layer = 1
+
+[node name="SpeedDebugLabel" type="Label" parent="HUD"]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 320.0
+offset_bottom = 112.0
+theme_override_font_sizes/font_size = 24
+text = "Speed: 0.0\nAccel: 0.0\nDecel: 0.0"
+
 [node name="env" type="Node3D" parent="." unique_id=1943740901]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="env" unique_id=1057535295]
